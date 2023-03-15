@@ -1,1 +1,2 @@
-EXIT_CMD='tml exit'
+EXIT_TERMINAL='tml exit'
+LOAD_PROCESS='loadproc'
