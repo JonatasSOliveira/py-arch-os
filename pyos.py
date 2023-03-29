@@ -4,6 +4,7 @@ import pyarch
 import pycmds
 import pycfg
 import pymsgs
+import pykmsgs
 from pyarch import load_binary_into_memory
 from pyarch import cpu_t
 
@@ -47,13 +48,21 @@ class os_t:
 			self.delete_last_char()
 			return
 		elif (key == curses.KEY_ENTER) or (key == ord('\n')):
-			self.verify_comand()
+			self.verify_command()
+			self.clean_console()
 			return
 
 	def handle_interrupt (self, interrupt):
 		if interrupt == pycfg.INTERRUPT_KEYBOARD:
 			self.interrupt_keyboard()
 			return
+		if interrupt == pycfg.INTERRUPT_MEMORY_PROTECTION_FAULT:
+			self.printk(pykmsgs.INTERRUPT_MEMORY_PROTECTION_FAULT_NOT_IMPLEMENT)
+			return
+		if interrupt == pycfg.INTERRUPT_TIMER:
+			self.printk(pykmsgs.INTERRUPT_TIMER_NOT_IMPLEMENT)
+			return
+
 		return
 
 	def syscall (self):
@@ -61,6 +70,11 @@ class os_t:
 		return
 
 	# NOTE: custom functions
+	def clean_console(self):
+		self.console_str = ''
+		console_message = ''
+		self.terminal.console_print(console_message)
+
 	def delete_last_char(self):
 		self.console_str = self.console_str[0:-1]
 		self.terminal.console_print('\r')
@@ -72,21 +86,17 @@ class os_t:
 
 	def cmd_not_found_handler(self):
 		self.terminal.console_print('\n' + self.console_str + ':' + pymsgs.COMMAND_NOT_FOUND + '\n\n')		
-		self.console_str = ''
 
 	def load_process(self):
-		process_name = self.console_str[len(pycmds.LOAD_PROCESS) + 1:].strip()
-		self.console_str = ''
-		console_message = ''
+		process_name = self.console_str[len(pycmds.LOAD_PROCESS) + 1:].strip()		
 
 		if process_name:
 			console_message = '\n' + process_name + ':' + pymsgs.PROCESS_LOADED + '\n\n'
 		else:
-			console_message = '\n' + pycmds.LOAD_PROCESS + ' ' + pymsgs.REQUIRE_PROCESS_NAME + '\n\n'
+			console_message = '\n' + pycmds.LOAD_PROCESS + ' ' + pymsgs.REQUIRE_PROCESS_NAME + '\n\n'		
 
-		self.terminal.console_print(console_message)		
-
-	def verify_comand(self):
+	def verify_command(self):
+		self.printk(pykmsgs.EXEC_FUNCTION + 'verify_comand')
 		if self.console_str == pycmds.EXIT_TERMINAL:
 			self.exit_terminal()
 			return
