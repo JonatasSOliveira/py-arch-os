@@ -75,7 +75,7 @@ class os_t:
 		self.console_str = ''
 
 	def load_process(self):
-		process_name = self.console_str[len(pycmds.LOAD_PROCESS) + 1:]
+		process_name = self.console_str[len(pycmds.LOAD_PROCESS) + 1:].strip()
 		self.console_str = ''
 		console_message = ''
 
