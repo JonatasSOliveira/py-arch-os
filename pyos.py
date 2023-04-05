@@ -66,7 +66,8 @@ class os_t:
 		return
 
 	def syscall (self):
-		#self.terminal.app_print(msg)		
+		#self.terminal.app_print(msg)
+		self.printk(pykmsgs.SYSCALL_NOT_IMPLEMENTED)		
 		return
 
 	# NOTE: custom functions
@@ -97,7 +98,9 @@ class os_t:
 		if process_name:
 			console_message = '\n' + process_name + ':' + pymsgs.PROCESS_LOADED + '\n\n'
 		else:
-			console_message = '\n' + pycmds.LOAD_PROCESS + ' ' + pymsgs.REQUIRE_PROCESS_NAME + '\n\n'		
+			console_message = '\n' + pycmds.LOAD_PROCESS + ' ' + pymsgs.REQUIRE_PROCESS_NAME + '\n\n'
+
+		self.terminal.console_print(console_message)
 
 	def verify_command(self):
 		self.print_exec_comand('verify_comand')
