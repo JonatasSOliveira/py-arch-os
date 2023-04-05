@@ -71,16 +71,19 @@ class os_t:
 
 	# NOTE: custom functions
 	def clean_console(self):
+		self.print_exec_comand('clean_console')
 		self.console_str = ''
 		console_message = ''
 		self.terminal.console_print(console_message)
 
 	def delete_last_char(self):
+		self.print_exec_comand('delete_last_char')
 		self.console_str = self.console_str[0:-1]
 		self.terminal.console_print('\r')
 		self.terminal.console_print(self.console_str)
 
 	def exit_terminal(self):
+		self.printk(pykmsgs.PROCESS_EXITED_INIT)
 		self.terminal.end()		
 		self.cpu.cpu_alive = False
 
@@ -88,6 +91,7 @@ class os_t:
 		self.terminal.console_print('\n' + self.console_str + ':' + pymsgs.COMMAND_NOT_FOUND + '\n\n')		
 
 	def load_process(self):
+		self.print_exec_comand('load_process')
 		process_name = self.console_str[len(pycmds.LOAD_PROCESS) + 1:].strip()		
 
 		if process_name:
@@ -96,7 +100,7 @@ class os_t:
 			console_message = '\n' + pycmds.LOAD_PROCESS + ' ' + pymsgs.REQUIRE_PROCESS_NAME + '\n\n'		
 
 	def verify_command(self):
-		self.printk(pykmsgs.EXEC_FUNCTION + 'verify_comand')
+		self.print_exec_comand('verify_comand')
 		if self.console_str == pycmds.EXIT_TERMINAL:
 			self.exit_terminal()
 			return
@@ -105,3 +109,6 @@ class os_t:
 			return
 
 		self.cmd_not_found_handler()		
+
+	def print_exec_comand(self, func_name):
+		self.printk(pykmsgs.EXEC_FUNCTION + ' ' + func_name)
